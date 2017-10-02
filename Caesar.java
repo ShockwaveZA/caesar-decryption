@@ -25,7 +25,7 @@ public class Caesar {
 		
 		// create alphabet and get every possible shift
 		Alphabet a = new Alphabet(alphabet);
-		String[] result = a.decode(message);
+		String[] result = a.decipher(message);
 		
 		// read in dictionary
 		String[] dictionary = new String[];
@@ -43,14 +43,14 @@ public class Caesar {
 		
 		// initialize arrays
 		
-		int[] hits = new int[result.length], shift = new int[result.length];
-		for (int k = 0; k < hits.length; k++) {
+		int[] hits = new int[result.length()], shift = new int[result.length()];
+		for (int k = 0; k < hits.length(); k++) {
 			hits[k] = 0;
 			shift[k] = k + 1;
 		}
 		
-		for (int k = 0; k < dictionary.length; k++) {
-			for (int j = 0; j < result.length; j++) {
+		for (int k = 0; k < dictionary.length(); k++) {
+			for (int j = 0; j < result.length(); j++) {
 				int index = result[j].indexOf(dictionary[k]);
 				while (index >= 0) {
 					index = result[j].indexOf(dictionary[k], index + 1);
@@ -60,19 +60,19 @@ public class Caesar {
 		}
 		
 		// sort ciphers by order of dictionary hits - most likely to be correct
-		for (int k = 0; k < result.length - 1; k++)
-			for (int j = k + 1; j < result.length; j++)
+		for (int k = 0; k < result.length() - 1; k++)
+			for (int j = k + 1; j < result.length(); j++)
 				if (hits[k] < hits[j]) {
 					String temp = result[k];
 					int stemp = shift[k];
 					result[k] = result[j];
-					shift[k] = shift[j]
+					shift[k] = shift[j];
 					result[j] = temp;
 					shift[j] = stemp;
 				}
 		
 		// output
-		for (int k = 0; k < result.length; k++) {
+		for (int k = 0; k < result.length(); k++) {
 			if (hits[k] > 0) {
 				// only outputs if there is at least one dictionary hit
 				
