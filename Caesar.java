@@ -1,12 +1,48 @@
 import java.io.*;
 
+// command line invocation:
+// java Caesar alphabetFileName messageFileName
+
 public class Caesar {
+	
+	public String readFile(String filename) {
+		try {
+			FileReader fr = new FileReader(filename);
+			BufferedReader br = new BufferedReader(fr);
+			String line = "", out = "";
+			while ((line = br.readLine()) != null)
+				out += line;
+			br.close();
+			fr.close();
+			
+			return out;
+		} catch (Exception e) { }
+	}
 
 	public static void main(String[] args) {
-		String alphabet = args[0], message = args[1];
+		// read in alphabet and message
+		String alphabet = readFile(args[0]), message = readFile(args[1]);
+		
+		// create alphabet and get every possible shift
 		Alphabet a = new Alphabet(alphabet);
 		String[] result = a.decode(message);
-		String[] dictionary = new String[]; // load a dictionary from file;
+		
+		// read in dictionary
+		String[] dictionary = new String[];
+		String line = "", dict = "";
+		try {
+			FileReader fr = new FileReader("dict/words.txt");
+			BufferedReader br = new BufferedReader(fr);
+			while ((line = br.readLine()) != null)
+				dict += line + "\n";
+			br.close();
+			fr.close();
+			
+			dictionary = dict.split("\n");
+		} catch (Exception e) { }
+		
+		// initialize arrays
+		
 		int[] hits = new int[result.length], shift = new int[result.length];
 		for (int k = 0; k < hits.length; k++) {
 			hits[k] = 0;
@@ -37,10 +73,14 @@ public class Caesar {
 		
 		// output
 		for (int k = 0; k < result.length; k++) {
-			System.out.println("==========");
-			System.out.println("shift: +" + shift[k]);
-			System.out.println("message: " + result[k]);
-			System.out.println("==========\n");
+			if (hits[k] > 0) {
+				// only outputs if there is at least one dictionary hit
+				
+				System.out.println("==========");
+				System.out.println("shift: +" + shift[k]);
+				System.out.println("message: " + result[k]);
+				System.out.println("==========\n");
+			}
 		}
 		// change k < result.length to k < 1 to only print out the top result
 	}
